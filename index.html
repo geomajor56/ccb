@@ -19,7 +19,7 @@
 <!----------------------------------CSS----------------------------------------->
 
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css"/>
-<link rel="stylesheet" href="./bootstrap/css/flatly.bootstrap.css">
+<link rel="stylesheet" href="./bootstrap/css/cyborg.bootstrap.css">
 <link rel="stylesheet" href="./bootstrap/css/bootstrap-responsive.min.css">
 <!--<link rel="stylesheet" href="./leaflet/leaflet.css">-->
 <link rel="stylesheet" href="./css/ccb.css">
@@ -55,17 +55,17 @@
 var map, geojsonLayer, thisStation, markers, mystation;
 $(document).ready(function () {
 
-    $('#action').click(function(){
+    $('#action').click(function () {
         $('#map-content').hide();
         $('#water-parameters-container').show();
         $("wp").scrollspy();
-  });
+    });
 
 
     /*   ========================     Splash Screen  text in <div id="myModal"><div class="modal-body">  =====================================*/
-    $('#myModal').modal({
-        keyboard: false
-    });
+    //$('#myModal').modal({
+    //    keyboard: false
+    //});
 
     /*   ================================LeafLet Map and Popups   ============================*/
 
@@ -770,8 +770,8 @@ $(document).ready(function () {
 </div>
 
 <!--  ****************************     Nav Bar   ******************************************-->
-<div class="container">
-    <header class="row">
+<div class="container-fluid">
+    <header class="row-fluid">
         <div class="span12">
             <nav class="navbar navbar-inverse">
                 <div class="navbar-inner">
@@ -828,36 +828,16 @@ $(document).ready(function () {
 
 <!--                          Map Content                            -->
 
-<div id="map-content" class="container rounded">
-    <div class="row">
-        <div class="span3 pull-left">
-            <div class="container">
-                <div class="row">
-                    <div class="span3 bs-docs-sidebar">
-                        <ul class="nav nav-list bs-docs-sidenav">
-                            <h3>Map Content</h3>
-                            <li><a href="#overview"><i class="icon-chevron-right"></i> Overview</a></li>
-                            <li><a href="#transitions"><i class="icon-chevron-right"></i> Transitions</a></li>
-                            <li><a href="#modals"><i class="icon-chevron-right"></i> Modal</a></li>
-                            <li><a href="#dropdowns"><i class="icon-chevron-right"></i> Dropdown</a></li>
-                            <li><a href="#scrollspy"><i class="icon-chevron-right"></i> Scrollspy</a></li>
-                            <li><a href="#tabs"><i class="icon-chevron-right"></i> Tab</a></li>
-                            <li><a href="#tooltips"><i class="icon-chevron-right"></i> Tooltip</a></li>
-                            <li><a href="#popovers"><i class="icon-chevron-right"></i> Popover</a></li>
-                            <li><a href="#alerts"><i class="icon-chevron-right"></i> Alert</a></li>
-                            <li><a href="#buttons"><i class="icon-chevron-right"></i> Button</a></li>
-                            <li><a href="#collapse"><i class="icon-chevron-right"></i> Collapse</a></li>
-                            <li><a href="#carousel"><i class="icon-chevron-right"></i> Carousel</a></li>
-                            <li><a href="#typeahead"><i class="icon-chevron-right"></i> Typeahead</a></li>
-                            <li><a href="#affix"><i class="icon-chevron-right"></i> Affix</a></li>
-                        </ul>
-                    </div>
-                    <div class="span9">
-                    </div>
-                </div>
-            </div>
+<div id="map-content" class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3 well rounded ">
+            Key in this study will be to map out the spatial and temporal variability in nutrient fluxes in the
+            bay, focusing specifically on nitrogen and phosphorous. Excessive nutrient input is behind most
+            major problems affecting coastal ecosystems, (e.g., eutrophication, algal blooms, hypoxia). It is
+            therefore important that we establish baseline data for the bay and continue to closely monitor
+            nutrient levels to address existing and imminent problems.
         </div>
-        <div class="span9 rounded pull-right">
+        <div class="span9 well well-small rounded pull-right">
             <div class="rounded" id="map"></div>
         </div>
     </div>
@@ -907,92 +887,109 @@ $(document).ready(function () {
 
 <!--                          Water Parameters Content                   -->
 
-<div id="water-parameters-container" class="container rounded" style="display: none;">
-    <div class="row">
-        <div class="span3 pull-left">
-            <div class="container">
-                <div class="row">
-                    <div id="wp" class="span3 bs-docs-sidebar">
-                        <ul class="nav nav-list bs-docs-sidenav" data-spy="affix">
-                            <h3>Water Content</h3>
-                            <li><a href="#nutrients"><i class="icon-chevron-right"></i>Nutrients</a></li>
-                            <li><a href="#chlorophyll"><i class="icon-chevron-right"></i>Chlorophyll a</a></li>
-                            <li><a href="#do"><i class="icon-chevron-right"></i>Dissolved Oxygen</a></li>
-                            <li><a href="#temp"><i class="icon-chevron-right"></i>Temperature and Salinity</a></li>
-                            <li><a href="#turbidity"><i class="icon-chevron-right"></i>Turbidity</a></li>
-                        </ul>
-                    </div>
+<div id="water-parameters-container" class="container-fluid" style="display: none;">
+    <div class="row-fluid">
+        <div class="span12">
+            <!--<div class="row-fluid">-->
+                <div class="span3 ">
+                    <ul class="nav nav-list well" data-spy="affix">
+                        <li class="nav-header">Water Parameters</li>
+                        <li class="divider"></li>
+                        <li><a href="#nutrients"><i class="icon-chevron-right"></i>Nutrients</a></li>
+                        <li><a href="#chlorophyll"><i class="icon-chevron-right"></i>Chlorophyll a</a></li>
+                        <li><a href="#do"><i class="icon-chevron-right"></i>Dissolved Oxygen</a></li>
+                        <li><a href="#temp"><i class="icon-chevron-right"></i>Temperature and Salinity</a></li>
+                        <li><a href="#turbidity"><i class="icon-chevron-right"></i>Turbidity</a></li>
+                    </ul>
                 </div>
-            </div>
-        </div>
-        <div id="content-container" class="span9 rounded pull-right">
-            <div id="water-parameters-content" class="well">
+            <!--</div>-->
+            <div id="content-container" class="span9 pull-right">
+                <div id="water-parameters-content" class="well well-small">
 
-                <h4 id="overview" data-offset-top="200">Overview</h4>
-
-                <p>
-                    The Provincetown Center for Coastal Studies (PCCS), initiated a water quality monitoring program in
-                    2006.This program is part of a larger project that focuses on the health of the marine and estuarine
-                    waters of Massachusetts, tracking changes in water quality and related indicators of ecosystem
-                    health.
-                </p>
-                <h4 id="nutrients" data-offset-top="200"> Nutrients</h4>
-
-                <p>
-                    Key in this study will be to map out the spatial and temporal variability in nutrient fluxes in the
-                    bay, focusing specifically on nitrogen and phosphorous. Excessive nutrient input is behind most
-                    major problems affecting coastal ecosystems, (e.g., eutrophication, algal blooms, hypoxia). It is
-                    therefore important that we establish baseline data for the bay and continue to closely monitor
-                    nutrient levels to address existing and imminent problems.
-                </p>
-                <h4 id="chlorophyll" data-offset-top="200">Chlorophyll a</h4>
-
-                <p>
-                    Chlorophyll a is a green photosynthetic pigment found in most phytoplankton and plant cells. It is a
-                    commonly measured parameter of water quality as it can be used as an estimate of the amount of
-                    organic matter produced within the bay. By keeping tract of trends in chlorophyll a, we are able to
-                    assess effects of nutrients entering the bay and better understand the delicate balance between
-                    photosynthetic rates, nutrient inputs, and oxygen levels in our bay waters.
-                </p>
-                <h4 id="do" data-offset-top="200">Dissolved Oxygen</h4>
-
-                <p>
-                    Dissolved oxygen concentrations are a measure of how well the water is aerated. This parameter is
-                    one of the best and most immediate indicators of a system's health (EPA). Because oxygen is needed
-                    to support animal and plant life, consequences of declining D.O. levels will set in quickly. This
-                    immediate impact on plant and animal life makes measuring the level of oxygen an important means of
-                    assessing water quality. Additionally, at low oxygen conditions, nutrients (and other pollutants)
-                    will be released from sediments thereby exacerbating problems.
-                </p>
-                <h4 id="temp" data-offset-top="200">Temperature and Salinity</h4>
-
-                <p>
-                    Water temperature and salinity are two of the most important physical properties of the marine
-                    environment, influencing many physical (density), chemical (capacity to hold D.O., sensitivity to
-                    toxic wastes), and biological processes (metabolic processes, photosynthesis) as well as dictating
-                    the types, distribution and abundance of marine flora and fauna. Monitoring levels of these
-                    properties, and more importantly, changes in the levels, will provide a direct indication of
-                    potential problems.
-                </p>
-                <h4 id="turbidity" data-offset-top="200">Turbidity</h4>
-
-                <p>
-                    Turbidity, a measure of water clarity or how much the material suspended in the water column
-                    decreases light penetration, will also be measured as an indicator of the quality of the water in
-                    the bay. High levels of turbidity can result from anthropogenic disturbances such as urban runoff,
-                    waste discharge, dredging, and boating, as well as natural disturbances such as storms, wave action,
-                    and bottom feeding animals. Highly turbid waters are detrimental to the entire ecosystem from
-                    sediment quality, to water chemistry, to the survival of plants and animals. Some of the associated
-                    negative impacts of high levels of turbidity include lowering the rates of photosynthesis,
-                    smothering benthic organisms, and altering bottom material and sediment size.
-                </p>
+                    <h4 id="overview" data-offset-top="200">Overview</h4>
 
 
+                    <p>
+                        The Provincetown Center for Coastal Studies (PCCS), initiated a water quality monitoring program
+                        in
+                        2006.This program is part of a larger project that focuses on the health of the marine and
+                        estuarine
+                        waters of Massachusetts, tracking changes in water quality and related indicators of ecosystem
+                        health.
+                    </p>
+
+                    <h4 id="nutrients" data-offset-top="200"> Nutrients</h4>
+
+                    <p>
+                        Key in this study will be to map out the spatial and temporal variability in nutrient fluxes in
+                        the
+                        bay, focusing specifically on nitrogen and phosphorous. Excessive nutrient input is behind most
+                        major problems affecting coastal ecosystems, (e.g., eutrophication, algal blooms, hypoxia). It
+                        is
+                        therefore important that we establish baseline data for the bay and continue to closely monitor
+                        nutrient levels to address existing and imminent problems.
+                    </p>
+                    <h4 id="chlorophyll" data-offset-top="200">Chlorophyll a</h4>
+
+                    <p>
+                        Chlorophyll a is a green photosynthetic pigment found in most phytoplankton and plant cells. It
+                        is a
+                        commonly measured parameter of water quality as it can be used as an estimate of the amount of
+                        organic matter produced within the bay. By keeping tract of trends in chlorophyll a, we are able
+                        to
+                        assess effects of nutrients entering the bay and better understand the delicate balance between
+                        photosynthetic rates, nutrient inputs, and oxygen levels in our bay waters.
+                    </p>
+                    <h4 id="do" data-offset-top="200">Dissolved Oxygen</h4>
+
+                    <p>
+                        Dissolved oxygen concentrations are a measure of how well the water is aerated. This parameter
+                        is
+                        one of the best and most immediate indicators of a system's health (EPA). Because oxygen is
+                        needed
+                        to support animal and plant life, consequences of declining D.O. levels will set in quickly.
+                        This
+                        immediate impact on plant and animal life makes measuring the level of oxygen an important means
+                        of
+                        assessing water quality. Additionally, at low oxygen conditions, nutrients (and other
+                        pollutants)
+                        will be released from sediments thereby exacerbating problems.
+                    </p>
+                    <h4 id="temp" data-offset-top="200">Temperature and Salinity</h4>
+
+                    <p>
+                        Water temperature and salinity are two of the most important physical properties of the marine
+                        environment, influencing many physical (density), chemical (capacity to hold D.O., sensitivity
+                        to
+                        toxic wastes), and biological processes (metabolic processes, photosynthesis) as well as
+                        dictating
+                        the types, distribution and abundance of marine flora and fauna. Monitoring levels of these
+                        properties, and more importantly, changes in the levels, will provide a direct indication of
+                        potential problems.
+                    </p>
+                    <h4 id="turbidity" data-offset-top="200">Turbidity</h4>
+
+                    <p>
+                        Turbidity, a measure of water clarity or how much the material suspended in the water column
+                        decreases light penetration, will also be measured as an indicator of the quality of the water
+                        in
+                        the bay. High levels of turbidity can result from anthropogenic disturbances such as urban
+                        runoff,
+                        waste discharge, dredging, and boating, as well as natural disturbances such as storms, wave
+                        action,
+                        and bottom feeding animals. Highly turbid waters are detrimental to the entire ecosystem from
+                        sediment quality, to water chemistry, to the survival of plants and animals. Some of the
+                        associated
+                        negative impacts of high levels of turbidity include lowering the rates of photosynthesis,
+                        smothering benthic organisms, and altering bottom material and sediment size.
+                    </p>
+
+
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 
 <!--<div class="rounded" id="water-parameters" style="display: none;">
 
