@@ -19,7 +19,9 @@
 <!----------------------------------CSS----------------------------------------->
 
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css"/>
-<link rel="stylesheet" href="./bootstrap/css/cyborg.bootstrap.css">
+<link rel="stylesheet" href="./leaflet-plugins/leaflet-minimap/dist/Control.MiniMap.css"/>
+<link rel="stylesheet" href="./leaflet-plugins/leaflet-minimap/dist/Control.MiniMap-de.js"/>
+<link rel="stylesheet" href="./bootstrap/css/flatly.bootstrap.css">
 <link rel="stylesheet" href="./bootstrap/css/bootstrap-responsive.min.css">
 <!--<link rel="stylesheet" href="./leaflet/leaflet.css">-->
 <link rel="stylesheet" href="./css/ccb.css">
@@ -30,6 +32,7 @@
 
 <script src="./bootstrap/js/bootstrap.min.js"></script>
 <script src="./bootstrap/js/bootstrap.dropdown.on.hover.min.js"></script>
+
 
 <!--------------------------     HighCharts       ----------------------------------------------------------->
 
@@ -42,8 +45,7 @@
 <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
 <!--<script src="./leaflet/Leaflet.js"></script>-->
 <script src="./leaflet-plugins/leaflet-providers/dist/leaflet-providers.js"></script>
-
-
+<script src="./leaflet-plugins/leaflet-minimap/dist/Control.MiniMap.js"></script>
 <link rel="stylesheet" href="./leaflet-plugins/leaflet-markercluster/dist/leaflet.markercluster.default.css"/>
 <link rel="stylesheet" href="./leaflet-plugins/leaflet-markercluster/dist/leaflet.markercluster.css"/>
 <!--[if lte IE 8]>
@@ -88,12 +90,27 @@ $(document).ready(function () {
 
     var defaultLayer = L.tileLayer.provider('Nokia.satelliteNoLabelsDay').addTo(map);
 
+    var cloudmadeURL = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+    var nightTime = L.tileLayer(cloudmadeURL, {
+        minZoom: 2,
+        maxZoom: 16,
+        styleId: 999
+    });
+
     var baseLayers = {
         "OpenStreetMap Default": osm,
         "Nokia Satellite": defaultLayer
     };
 
     L.control.layers(baseLayers).addTo(map);
+
+
+    var miniMap = new L.Control.MiniMap(nightTime, {
+        position: 'bottomleft',
+        width: 200,
+        height: 200,
+        toggleDisplay: true
+    }).addTo(map);
 
     /* -----------------------------------   Station Points--------------------------------  */
     var markers = new L.MarkerClusterGroup({spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: true});
@@ -830,14 +847,27 @@ $(document).ready(function () {
 
 <div id="map-content" class="container-fluid">
     <div class="row-fluid">
-        <div class="span3 well rounded ">
+        <div class="span3 well well-small rounded ">
             Key in this study will be to map out the spatial and temporal variability in nutrient fluxes in the
             bay, focusing specifically on nitrogen and phosphorous. Excessive nutrient input is behind most
             major problems affecting coastal ecosystems, (e.g., eutrophication, algal blooms, hypoxia). It is
             therefore important that we establish baseline data for the bay and continue to closely monitor
             nutrient levels to address existing and imminent problems.
+
+                <ul class="nav nav-list ">
+                    <h4>Chart Content</h4>
+                    <li><a href="#overview"><i class="icon-chevron-right"></i> Overview</a></li>
+                    <li><a href="#transitions"><i class="icon-chevron-right"></i> Transitions</a></li>
+                    <li><a href="#modals"><i class="icon-chevron-right"></i> Modal</a></li>
+
+                    <li><a href="#collapse"><i class="icon-chevron-right"></i> Collapse</a></li>
+                    <li><a href="#carousel"><i class="icon-chevron-right"></i> Carousel</a></li>
+                    <li><a href="#typeahead"><i class="icon-chevron-right"></i> Typeahead</a></li>
+                    <li><a href="#affix"><i class="icon-chevron-right"></i> Affix</a></li>
+                </ul>
+           
         </div>
-        <div class="span9 well well-small rounded pull-right">
+        <div class="span9 rounded pull-right">
             <div class="rounded" id="map"></div>
         </div>
     </div>
@@ -851,7 +881,7 @@ $(document).ready(function () {
             <div class="container">
                 <div class="row">
                     <div class="span3 bs-docs-sidebar">
-                        <ul class="nav nav-list bs-docs-sidenav">
+                        <ul class="nav nav-list ">
                             <h3>Chart Content</h3>
                             <li><a href="#overview"><i class="icon-chevron-right"></i> Overview</a></li>
                             <li><a href="#transitions"><i class="icon-chevron-right"></i> Transitions</a></li>
@@ -891,17 +921,17 @@ $(document).ready(function () {
     <div class="row-fluid">
         <div class="span12">
             <!--<div class="row-fluid">-->
-                <div class="span3 ">
-                    <ul class="nav nav-list well" data-spy="affix">
-                        <li class="nav-header">Water Parameters</li>
-                        <li class="divider"></li>
-                        <li><a href="#nutrients"><i class="icon-chevron-right"></i>Nutrients</a></li>
-                        <li><a href="#chlorophyll"><i class="icon-chevron-right"></i>Chlorophyll a</a></li>
-                        <li><a href="#do"><i class="icon-chevron-right"></i>Dissolved Oxygen</a></li>
-                        <li><a href="#temp"><i class="icon-chevron-right"></i>Temperature and Salinity</a></li>
-                        <li><a href="#turbidity"><i class="icon-chevron-right"></i>Turbidity</a></li>
-                    </ul>
-                </div>
+            <div class="span3 ">
+                <ul class="nav nav-list well" data-spy="affix">
+                    <li class="nav-header">Water Parameters</li>
+                    <li class="divider"></li>
+                    <li><a href="#nutrients"><i class="icon-chevron-right"></i>Nutrients</a></li>
+                    <li><a href="#chlorophyll"><i class="icon-chevron-right"></i>Chlorophyll a</a></li>
+                    <li><a href="#do"><i class="icon-chevron-right"></i>Dissolved Oxygen</a></li>
+                    <li><a href="#temp"><i class="icon-chevron-right"></i>Temperature and Salinity</a></li>
+                    <li><a href="#turbidity"><i class="icon-chevron-right"></i>Turbidity</a></li>
+                </ul>
+            </div>
             <!--</div>-->
             <div id="content-container" class="span9 pull-right">
                 <div id="water-parameters-content" class="well well-small">
