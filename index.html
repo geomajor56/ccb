@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -21,6 +21,8 @@
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css"/>
 <link rel="stylesheet" href="./leaflet-plugins/leaflet-minimap/dist/Control.MiniMap.css"/>
 <link rel="stylesheet" href="./leaflet-plugins/leaflet-minimap/dist/Control.MiniMap-de.js"/>
+<link rel="stylesheet" href="./leaflet-plugins/leaflet-coordinates/dist/Leaflet.Coordinates-0.1.3.css">
+<!--[if lte IE 8]><link rel="stylesheet" href="./leaflet-plugins/leaflet-coordinates/dist/Leaflet.Coordinates-0.1.3.ie.css" /><![endif]-->
 <link rel="stylesheet" href="./bootstrap/css/flatly.bootstrap.css">
 <link rel="stylesheet" href="./bootstrap/css/bootstrap-responsive.min.css">
 <!--<link rel="stylesheet" href="./leaflet/leaflet.css">-->
@@ -46,6 +48,7 @@
 <!--<script src="./leaflet/Leaflet.js"></script>-->
 <script src="./leaflet-plugins/leaflet-providers/dist/leaflet-providers.js"></script>
 <script src="./leaflet-plugins/leaflet-minimap/dist/Control.MiniMap.js"></script>
+<script src="./leaflet-plugins/leaflet-coordinates/dist/Leaflet.Coordinates-0.1.3.min.js"></script>
 <link rel="stylesheet" href="./leaflet-plugins/leaflet-markercluster/dist/leaflet.markercluster.default.css"/>
 <link rel="stylesheet" href="./leaflet-plugins/leaflet-markercluster/dist/leaflet.markercluster.css"/>
 <!--[if lte IE 8]>
@@ -92,7 +95,7 @@ $(document).ready(function () {
 
     var cloudmadeURL = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
     var nightTime = L.tileLayer(cloudmadeURL, {
-        minZoom: 2,
+        minZoom: 4,
         maxZoom: 16,
         styleId: 999
     });
@@ -112,8 +115,15 @@ $(document).ready(function () {
         toggleDisplay: true
     }).addTo(map);
 
+    L.control.coordinates().addTo(map);
+
     /* -----------------------------------   Station Points--------------------------------  */
-    var markers = new L.MarkerClusterGroup({spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: true});
+    var markers = new L.MarkerClusterGroup({
+        maxClusterRadius: 20,
+        spiderfyOnMaxZoom: false,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: false
+    });
 
     function handleJson(data) {
         var geojsonLayer = L.geoJson(data, {
@@ -129,6 +139,9 @@ $(document).ready(function () {
 
         markers.addLayer(geojsonLayer);
         map.addLayer(markers);
+        markers.on('clusterclick', function (a) {
+            a.layer.spiderfy();
+        });
 
     }
 
@@ -202,6 +215,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: "../php/get_station_data.php",
+            password: 'Wyliepup1',
             data: {
                 "station_num_id": mystation
             },
@@ -216,19 +230,20 @@ $(document).ready(function () {
         function chartParser(data) {
 
             for (var i = 0; i < data.length; i++) {
-                var date = data[i][0];
-
-                temperature.push([date, data[i][1]]);
-                salinity.push([date, data[i][2]]);
-                dissolved_oxygen.push([date, data[i][3]]);
-                nitrogen.push([date, data[i][4]]);
-                phosphates.push([date, data[i][5]]);
-                ammonium.push([date, data[i][6]]);
-                total_nitrogen.push([date, data[i][7]]);
-                total_phosphorus.push([date, data[i][8]]);
-                chlorophyll.push([date, data[i][9]]);
-                pheophytin.push([date, data[i][10]]);
-                turbidity.push([date, data[i][11]]);
+                sampleDate = data[i][0]; // in milliseconds for Highcharts
+                d = new Date(data[i][0]);
+                sampleYear = d.getFullYear();
+                temperature.push([sampleDate, data[i][1]]);
+                salinity.push([sampleDate, data[i][2]]);
+                dissolved_oxygen.push([sampleDate, data[i][3]]);
+                nitrogen.push([sampleDate, data[i][4]]);
+                phosphates.push([sampleDate, data[i][5]]);
+                ammonium.push([sampleDate, data[i][6]]);
+                total_nitrogen.push([sampleDate, data[i][7]]);
+                total_phosphorus.push([sampleDate, data[i][8]]);
+                chlorophyll.push([sampleDate, data[i][9]]);
+                pheophytin.push([sampleDate, data[i][10]]);
+                turbidity.push([sampleDate, data[i][11]]);
 
             }
 
@@ -854,18 +869,18 @@ $(document).ready(function () {
             therefore important that we establish baseline data for the bay and continue to closely monitor
             nutrient levels to address existing and imminent problems.
 
-                <ul class="nav nav-list ">
-                    <h4>Chart Content</h4>
-                    <li><a href="#overview"><i class="icon-chevron-right"></i> Overview</a></li>
-                    <li><a href="#transitions"><i class="icon-chevron-right"></i> Transitions</a></li>
-                    <li><a href="#modals"><i class="icon-chevron-right"></i> Modal</a></li>
+            <ul class="nav nav-list ">
+                <h4>Chart Content</h4>
+                <li><a href="#overview"><i class="icon-chevron-right"></i> Overview</a></li>
+                <li><a href="#transitions"><i class="icon-chevron-right"></i> Transitions</a></li>
+                <li><a href="#modals"><i class="icon-chevron-right"></i> Modal</a></li>
 
-                    <li><a href="#collapse"><i class="icon-chevron-right"></i> Collapse</a></li>
-                    <li><a href="#carousel"><i class="icon-chevron-right"></i> Carousel</a></li>
-                    <li><a href="#typeahead"><i class="icon-chevron-right"></i> Typeahead</a></li>
-                    <li><a href="#affix"><i class="icon-chevron-right"></i> Affix</a></li>
-                </ul>
-           
+                <li><a href="#collapse"><i class="icon-chevron-right"></i> Collapse</a></li>
+                <li><a href="#carousel"><i class="icon-chevron-right"></i> Carousel</a></li>
+                <li><a href="#typeahead"><i class="icon-chevron-right"></i> Typeahead</a></li>
+                <li><a href="#affix"><i class="icon-chevron-right"></i> Affix</a></li>
+            </ul>
+
         </div>
         <div class="span9 rounded pull-right">
             <div class="rounded" id="map"></div>
