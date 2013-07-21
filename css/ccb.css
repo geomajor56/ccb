@@ -1,22 +1,10 @@
-/* Chrome Frame Prompt */
-.chromeframe {
-    display: block;
-    position: absolute;
-    top: 40px;
-    z-index: 100;
-    width: 100%;
-    margin: 0;
-    text-align: center;
-    font-size: 0.9em;
-    background: #FFFF07;
-    color: black;
-    padding: 1px;
+.marker-cluster div {
+    /*this is to make the cluster number black instead of grey*/
+    color: #000000;
 }
 
 body {
     padding: 1em;
-    //background-color: #2C3E50;
-
 }
 
 .rounded {
@@ -28,7 +16,6 @@ body {
 #map {
     height: 65em;
 }
-
 
 #container1 {
     margin: 1px;

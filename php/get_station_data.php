@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
 $user = 'mas';
-$pass = 'Wyliepup1';
+$pass = '******';
 $db = 'mas';
 
 $station_num_id = $_POST['station_num_id'];
