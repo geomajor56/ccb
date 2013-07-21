@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -132,7 +132,7 @@ $(document).ready(function () {
                 layer.bindPopup(feature.properties.station_name);
                 layer.on({
                     mouseover: highlightFeature,
-                    click: makeCharts
+                    click: temp  //makeCharts
                 });
 
             }
@@ -145,6 +145,15 @@ $(document).ready(function () {
 //        });
 
     }
+
+
+    function temp() {
+            $('#map-content').hide();
+             $('#chart-content').show();
+
+
+        }
+
 
     /*  ===========================    GeoServer request    =============================*/
 
@@ -213,7 +222,7 @@ $(document).ready(function () {
         var turbidity = [];
 
 
-        $.ajax({
+        /*$.ajax({
             type: "POST",
             url: "../php/get_station_data.php",
             password: 'Wyliepup1',
@@ -226,9 +235,11 @@ $(document).ready(function () {
                 alert(thrownError);
             },
             success: chartParser
-        });
+        });*/
 
         function chartParser(data) {
+            $('#map-content').hide();
+             $('#chart-content').show();
 
             for (var i = 0; i < data.length; i++) {
                 sampleDate = data[i][0]; // in milliseconds for Highcharts
@@ -248,10 +259,10 @@ $(document).ready(function () {
 
             }
 
-            var chart1 = new Highcharts.Chart(chart1_options);
-            var chart2 = new Highcharts.Chart(chart2_options);
-            var chart3 = new Highcharts.Chart(chart3_options);
-            var chart4 = new Highcharts.Chart(chart4_options);
+//            var chart1 = new Highcharts.Chart(chart1_options);
+//            var chart2 = new Highcharts.Chart(chart2_options);
+//            var chart3 = new Highcharts.Chart(chart3_options);
+//            var chart4 = new Highcharts.Chart(chart4_options);
         }
 
         var chart1_options = {
@@ -864,23 +875,14 @@ $(document).ready(function () {
 <div id="map-content" class="container-fluid">
     <div class="row-fluid">
         <div class="span3 well well-small rounded ">
-            Key in this study will be to map out the spatial and temporal variability in nutrient fluxes in the
+            <h4>Map Content</h4>
+            <p>I have no idea what to put here. Maybe some instructions?</p>
             bay, focusing specifically on nitrogen and phosphorous. Excessive nutrient input is behind most
             major problems affecting coastal ecosystems, (e.g., eutrophication, algal blooms, hypoxia). It is
             therefore important that we establish baseline data for the bay and continue to closely monitor
-            nutrient levels to address existing and imminent problems.
+            nutrient levels to address existing and imminent problems.</p>
 
-            <ul class="nav nav-list ">
-                <h4>Chart Content</h4>
-                <li><a href="#overview"><i class="icon-chevron-right"></i> Overview</a></li>
-                <li><a href="#transitions"><i class="icon-chevron-right"></i> Transitions</a></li>
-                <li><a href="#modals"><i class="icon-chevron-right"></i> Modal</a></li>
 
-                <li><a href="#collapse"><i class="icon-chevron-right"></i> Collapse</a></li>
-                <li><a href="#carousel"><i class="icon-chevron-right"></i> Carousel</a></li>
-                <li><a href="#typeahead"><i class="icon-chevron-right"></i> Typeahead</a></li>
-                <li><a href="#affix"><i class="icon-chevron-right"></i> Affix</a></li>
-            </ul>
 
         </div>
         <div class="span9 rounded pull-right">
@@ -891,34 +893,123 @@ $(document).ready(function () {
 
 <!--                          Charts  Content                            -->
 
-<div id="chart-content" class="container rounded" style="display: none;">
-    <div class="row">
+<div id="chart-content" class="container-fluid" style="display: none;">
+    <div class="row-fluid">
         <div class="span3 pull-left">
-            <div class="container">
-                <div class="row">
-                    <div class="span3 bs-docs-sidebar">
-                        <ul class="nav nav-list ">
-                            <h3>Chart Content</h3>
-                            <li><a href="#overview"><i class="icon-chevron-right"></i> Overview</a></li>
-                            <li><a href="#transitions"><i class="icon-chevron-right"></i> Transitions</a></li>
-                            <li><a href="#modals"><i class="icon-chevron-right"></i> Modal</a></li>
-                            <li><a href="#dropdowns"><i class="icon-chevron-right"></i> Dropdown</a></li>
-                            <li><a href="#scrollspy"><i class="icon-chevron-right"></i> Scrollspy</a></li>
-                            <li><a href="#tabs"><i class="icon-chevron-right"></i> Tab</a></li>
-                            <li><a href="#tooltips"><i class="icon-chevron-right"></i> Tooltip</a></li>
-                            <li><a href="#popovers"><i class="icon-chevron-right"></i> Popover</a></li>
-                            <li><a href="#alerts"><i class="icon-chevron-right"></i> Alert</a></li>
-                            <li><a href="#buttons"><i class="icon-chevron-right"></i> Button</a></li>
-                            <li><a href="#collapse"><i class="icon-chevron-right"></i> Collapse</a></li>
-                            <li><a href="#carousel"><i class="icon-chevron-right"></i> Carousel</a></li>
-                            <li><a href="#typeahead"><i class="icon-chevron-right"></i> Typeahead</a></li>
-                            <li><a href="#affix"><i class="icon-chevron-right"></i> Affix</a></li>
-                        </ul>
+            <div class="container well">
+            <!--<div class="row">-->
+                    <div class="span3">
+                        <div class="accordion" id="accordion2">
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseOne">
+                                2006
+                            </a>
+                        </div>
+                        <div id="collapseOne" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <h5>Station Summary</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseTwo">
+                                2007
+                            </a>
+                        </div>
+                        <div id="collapseTwo" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Station Summary
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseThree">
+                                2008
+                            </a>
+                        </div>
+                        <div id="collapseThree" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Station Summary
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseFour">
+                               2009
+                            </a>
+                        </div>
+                        <div id="collapseFour" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                               Station Summary
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseFive">
+                                2010
+                            </a>
+                        </div>
+                        <div id="collapseFive" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Station Summary
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseSix">
+                                2011
+                            </a>
+                        </div>
+                        <div id="collapseSix" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                               Station Summary
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseSeven">
+                                2012
+                            </a>
+                        </div>
+                        <div id="collapseSeven" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Station Summary
+                            </div>
+                        </div>
+                    </div>
+                        <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                               href="#collapseEight">
+                                2013
+                            </a>
+                        </div>
+                        <div id="collapseEight" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Station Summary
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     </div>
                     <div class="span9">
                     </div>
                 </div>
-            </div>
+            <!--</div>-->
         </div>
         <div class="span9 rounded pull-right">
             <div class="rounded" id="chart-container"></div>
