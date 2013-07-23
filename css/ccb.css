@@ -3,6 +3,22 @@
     color: #000000;
 }
 
+.modal-body{
+    background-image:url('../images/Color_Logo_transpa_20.png');
+    background-repeat: no-repeat;
+    background-position: center;
+
+}
+
+.modal-body p
+    { text-shadow: 1px 1px 1px #000; }
+
+
+
+img {
+    opacity: 0.4;
+    filter: alpha(opacity = 40); /* For IE */
+}
 body {
     padding: 1em;
 }
