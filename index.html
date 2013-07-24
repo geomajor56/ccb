@@ -65,13 +65,12 @@ $(document).ready(function () {
     //TODO need to put all functions in one place goddamit!!
 
 
-//    if ($.cookie('modal_shown') == null) {
-//        $.cookie('modal_shown', 'yes', { expires: 7, path: '/' });
+    if ($.cookie('modal_shown') == null) {
+        $.cookie('modal_shown', 'yes', { expires: 7, path: '/' });
         $('#myModal').modal({
             keyboard: false
         });
-
-//    }
+    }
 
     $('#action').click(function () {
         $('#map-content').hide();
@@ -79,10 +78,6 @@ $(document).ready(function () {
         $("wp").scrollspy();
     });
 
-    /*   ========================     Splash Screen  text in <div id="myModal"><div class="modal-body">  =====================================*/
-    //$('#myModal').modal({
-    //    keyboard: false
-    //});
 
     /*   ================================LeafLet Map and Popups   ============================*/
 
@@ -143,8 +138,8 @@ $(document).ready(function () {
             onEachFeature: function (feature, layer) {
                 layer.bindPopup(feature.properties.station_name);
                 layer.on({
-                    mouseover: highlightFeature,
-                    click: temp  //makeCharts
+                    mouseover: highlightFeature
+                    //click: temp  //makeCharts
                 });
 
             }
@@ -194,7 +189,8 @@ $(document).ready(function () {
     function highlightFeature(e) {// TODO this is where the popup should be modified. start using this.target
         var layer = e.target;
         thisStation = e.target.feature.properties.station_name;
-        layer.bindPopup('Station: ' + thisStation + '<br>' + 'Click for Station Data').openPopup();
+        //layer.bindPopup('Station: ' + thisStation + '<br>' + '<a href="#">Click here for Station Data</a>').openPopup();
+         layer.bindPopup('Station: ' + thisStation + '<br>' + '<id="getInfo" button class="btn btn-small btn-danger" type="button">Station Data</button>').openPopup();
     }
 
     $("#back-to-map").click(function () {//TODO disable on ...
@@ -208,7 +204,12 @@ $(document).ready(function () {
         map.fitBounds(bounds);
     });
 
+
+
+    $('#getInfo').click(makeCharts);
+
     function makeCharts(e) { //TODO too many arbitrary parameters in my functions, could be trouble
+        console.log(mystation);
         $('#map').hide();
         $('#container1').show();//TODO there has to be a more efficient way with jquery
         $('#container2').show();
@@ -761,7 +762,7 @@ $(document).ready(function () {
 
         <h3 id="myModalLabel">Cape Cod Bay Monitoring</h3>
     </div>
-    <div class="modal-body" >
+    <div class="modal-body">
         <p>
             The Provincetown Center for Coastal Studies (PCCS), initiated a water quality monitoring program in
             2006.
