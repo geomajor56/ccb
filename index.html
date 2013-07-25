@@ -57,26 +57,41 @@
 <!--&lt;!&ndash;<link rel="stylesheet" href="./leaflet-plugins/leaflet-markercluster/dist/leafletmarkercluster.default.ie.css"/>
 -->
 <script src="./leaflet-plugins/leaflet-markercluster/dist/leaflet.markercluster-src.js"></script>
-
 <script>
+
 var map, geojsonLayer, thisStation, markers, mystation;
 $(document).ready(function () {
 
     //TODO need to put all functions in one place goddamit!!
 
-
+ /*   ================================   Splash Screen  ============================*/
     if ($.cookie('modal_shown') == null) {
         $.cookie('modal_shown', 'yes', { expires: 7, path: '/' });
         $('#myModal').modal({
             keyboard: false
         });
     }
-
+ /*   ================================    Functions   ============================*/
     $('#action').click(function () {
         $('#map-content').hide();
         $('#water-parameters-container').show();
         $("wp").scrollspy();
     });
+
+    function handleJson(data) { //TODO need to work on popup, no hover, click, and add onclick link inside of popup
+        var geojsonLayer = L.geoJson(data, {
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(feature.properties.station_name);
+                layer.on({
+                    mouseover: highlightFeature
+                    //click: temp  //makeCharts
+                });
+            }
+        });
+
+        markers.addLayer(geojsonLayer);
+        map.addLayer(markers);
+    }
 
 
     /*   ================================LeafLet Map and Popups   ============================*/
@@ -124,7 +139,7 @@ $(document).ready(function () {
 
     L.control.coordinates().addTo(map);
 
-    /* -----------------------------------   Station Points--------------------------------  */
+
     var markers = new L.MarkerClusterGroup({
         maxClusterRadius: 25,
         spiderfyOnMaxZoom: true,
@@ -133,36 +148,8 @@ $(document).ready(function () {
         zoomToBoundsOnClick: true
     });
 
-    function handleJson(data) { //TODO need to work on popup, no hover, click, and add onclick link inside of popup
-        var geojsonLayer = L.geoJson(data, {
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup(feature.properties.station_name);
-                layer.on({
-                    mouseover: highlightFeature
-                    //click: temp  //makeCharts
-                });
 
-            }
-        });
-
-        markers.addLayer(geojsonLayer);
-        map.addLayer(markers);
-//        markers.on('clusterclick', function (a) {
-//            a.layer.spiderfy();
-//        });
-
-    }
-
-
-    function temp() {
-        $('#map-content').hide();
-        $('#chart-content').show();
-
-
-    }
-
-
-    /*  ===========================    GeoServer request    =============================*/
+    /*  ===========================    GeoServer request  for station points  =============================*/
 
     var rootUrl = 'http://tomcat.capecodgis.com/geoserver/capecodgis/ows';
 
@@ -203,7 +190,6 @@ $(document).ready(function () {
     $("#zoom-out-cape").click(function () {//TODO disable on ...
         map.fitBounds(bounds);
     });
-
 
 
     $('#getInfo').click(makeCharts);
