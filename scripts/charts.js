@@ -19,26 +19,26 @@ $(document).ready(function () {
 
     function handleJson(data) { //TODO need to work on popup, no hover, click, and add onclick link inside of popup
         var geojsonLayer = L.geoJson(data, {
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup(feature.properties.station_name);
-                layer.on({
-                    mouseover: highlightFeature
+            onEachFeature: onEachFeature //function (feature, layer) {
+                //layer.bindPopup(feature.properties.station_name);
+                //layer.on({
+                 //   mouseover: highlightFeature
                     //click: temp  //makeCharts
-                });
-            }
+                //});
+            //}
         });
 
         markers.addLayer(geojsonLayer);
         map.addLayer(markers);
     }
 
-    function highlightFeature(e) {
+    /*function highlightFeature(e) {
         layer = e.target;
         thisStation = e.target.feature.properties.station_name;
         var link = '<a href="#" id="getInfo">TestLink</a>'
-        layer.bindPopup('Station: ' + thisStation + '<br>' + link);//.openPopup();
+        layer.bindPopup('Statsdfion: ' + thisStation + '<br>' + link);//.openPopup();
         //layer.bindPopup('Station: ' + thisStation + '<br>' + '<button class="btn btn-small btn-danger" id="getInfo" type="button">Station Data</button>').openPopup();
-    }
+    }*/
 
     $("#back-to-map").click(function () {//TODO disable on ...
         $('#container1').hide();
@@ -50,6 +50,34 @@ $(document).ready(function () {
     $("#zoom-out-cape").click(function () {//TODO disable on ...
         map.fitBounds(bounds);
     });
+
+    function doIt(){
+        alert("Hey MotherFuckers");
+    }
+
+
+    function highlightFeature(e) {
+        var layer = e.target;
+
+//              if (!L.Browser.ie && !L.Browser.opera) {
+//            layer.bringToFront();
+//        }
+
+        info.update(layer.feature.properties);
+    }
+
+
+
+
+    function onEachFeature(feature, layer) {
+			if (feature.properties) {
+            	layer.bindPopup(feature.properties.station_name);
+          	}
+			layer.on({
+				mouseover: highlightFeature,
+				click: doIt
+			});
+		}
 
     /*   ================================LeafLet Map and Popups   ============================*/
 
@@ -84,7 +112,7 @@ $(document).ready(function () {
         "Nokia Satellite": defaultLayer
     };
 
-    L.control.layers(baseLayers).addTo(map);
+    //L.control.layers(baseLayers).addTo(map);
 
 
     var miniMap = new L.Control.MiniMap(nightTime, {
@@ -104,6 +132,22 @@ $(document).ready(function () {
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true
     });
+/*  ====================    mcBrides Info Panel   ==========================================  */
+    // control that shows state info on hover
+    var info = L.control();
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+        this._div.innerHTML = '<h4>Station Info</h4>' + (props ?
+                 "Station Name: " + '<b>' +  props.station_name + '</b><br />' + "Station Type: " +  '<b>' + props.station_type + '</b>' : 'Hover over a Marker');
+    };
+
+    info.addTo(map);
 
 
     /*  ===========================    GeoServer request  for station points  =============================*/
@@ -133,12 +177,6 @@ $(document).ready(function () {
 
     /*  ===========================    HighCharts   =============================*/
 
-
-    $("#getInfo").click(function () {
-        alert("Handler for .click() called.");
-    });
-
-    //$('#getInfo').click();
 
     function makeCharts(e) { //TODO too many arbitrary parameters in my functions, could be trouble
         console.log(mystation);
