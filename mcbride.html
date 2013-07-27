@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet GeoJSON Hacks Example</title>
+    <meta charset="utf-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css"/>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css"/>
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.ie.css"/><![endif]-->
+
+    <style>
+        #statelist {
+            border: 1px solid black;
+            width: 200px;
+            height: 500px;
+            overflow: auto;
+            float: left;
+        }
+
+        #mapcontainer {
+            border: 1px solid black;
+            width: 700px;
+            height: 500px;
+            margin-left: 210px;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+
+        .legend {
+            text-align: left;
+            line-height: 18px;
+            color: #555;
+        }
+
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .ui-widget {
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .ui-autocomplete {
+            cursor: default;
+            z-index: 1000 !important;
+        }
+    </style>
+</head>
+<body>
+<p><select id="zoom"
+           onchange="zoomToState(this.options[this.selectedIndex].text, this.value, this.options[this.selectedIndex].id)"></select>
+</p>
+
+<p>State Search:&nbsp;<input id="search"/></p>
+
+<div id="statelist">
+    <table></table>
+</div>
+<div id="mapcontainer">
+    <div id="map"></div>
+</div>
+
+<script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://leaflet.cloudmade.com/examples/us-states.js"></script>
+<script type="text/javascript">
+
+    var map = L.map('map').setView([37.8, -96], 4);
+
+    var cloudmade = L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+        key: 'BC9A493B41014CAABB98F0471D759707',
+        styleId: 22677
+    }).addTo(map);
+
+
+    // control that shows state info on hover
+    var info = L.control();
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+        this._div.innerHTML = '<h4>US Population Density</h4>' + (props ?
+                '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+                : 'Hover over a state');
+    };
+
+    info.addTo(map);
+
+
+    // get color depending on population density value
+    function getColor(d) {
+        return d > 1000 ? '#800026' :
+                d > 500 ? '#BD0026' :
+                        d > 200 ? '#E31A1C' :
+                                d > 100 ? '#FC4E2A' :
+                                        d > 50 ? '#FD8D3C' :
+                                                d > 20 ? '#FEB24C' :
+                                                        d > 10 ? '#FED976' :
+                                                                '#FFEDA0';
+    }
+
+    function style(feature) {
+        return {
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7,
+            fillColor: getColor(feature.properties.density)
+        };
+    }
+
+    function highlightFeature(e) {
+        var layer = e.target;
+
+        layer.setStyle({
+            weight: 5,
+            color: '#666',
+            dashArray: '',
+            fillOpacity: 0.7
+        });
+
+        if (!L.Browser.ie && !L.Browser.opera) {
+            layer.bringToFront();
+        }
+
+        info.update(layer.feature.properties);
+    }
+
+    var geojson;
+
+    function resetHighlight(e) {
+        geojson.resetStyle(e.target);
+        info.update();
+    }
+
+    function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+    }
+
+    function onEachFeature(feature, layer) {
+        if (feature.properties) {
+            layer.bindPopup(feature.properties.name);
+        }
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: zoomToFeature
+        });
+    }
+
+    geojson = L.geoJson(statesData, {
+        style: style,
+        onEachFeature: onEachFeature
+    }).addTo(map);
+
+    map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
+
+
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+                labels = [],
+                from, to;
+
+        for (var i = 0; i < grades.length; i++) {
+            from = grades[i];
+            to = grades[i + 1];
+
+            labels.push(
+                    '<i style="background:' + getColor(from + 1) + '"></i> ' +
+                            from + (to ? '&ndash;' + to : '+'));
+        }
+
+        div.innerHTML = labels.join('<br>');
+        return div;
+    };
+
+    legend.addTo(map);
+
+    // Loop through the geojson features and extract bbox and name, then add the options to the "zoom" select (no jQuery)
+    /*var select = document.getElementById("zoom");
+     select.options[select.options.length] = new Option('Select a State', 'Select a State');
+     for (each in geojson._layers) {
+     var bbox = geojson._layers[each].getBounds()._southWest.lat + "," + geojson._layers[each].getBounds()._southWest.lng + "," + geojson._layers[each].getBounds()._northEast.lat + "," + geojson._layers[each].getBounds()._northEast.lng;
+     select.options[select.options.length] = new Option(geojson._layers[each].feature.properties.name, bbox);
+     }*/
+
+    // Loop through the geojson features and extract bbox and name, then add the options to the "zoom" select and build autocomplete(using jquery)
+    var options = '<option value="Select a State">Select a State</option>';
+    var states = [];
+    /*for (each in geojson._layers) {
+     var id = geojson._layers[each]._leaflet_id;
+     var name = geojson._layers[each].feature.properties.name;
+     var bbox = geojson._layers[each].getBounds().toBBoxString();
+
+     // Populate states array and build autocomplete
+     states.push({id: id, label: name, value: name, bbox: bbox});
+     $( "#search" ).autocomplete({
+     source: states,
+     minLength: 3,
+     select: function( event, ui ) {
+     map.fitBounds([[parseFloat(ui.item.bbox.split(",")[1]), parseFloat(ui.item.bbox.split(",")[0])],[parseFloat(ui.item.bbox.split(",")[3]), parseFloat(ui.item.bbox.split(",")[2])]]);
+     map._layers[ui.item.id].openPopup();
+     map._layers[ui.item.id]._popup.setLatLng(map._layers[ui.item.id].getBounds().getCenter());
+     }
+     });
+     // Populate sidebar table with clickable state links
+     $("#statelist table").append('<tr><td><a href="#" onclick="map._layers['+id+'].openPopup(); map._layers['+id+']._popup.setLatLng(map._layers['+id+'].getBounds().getCenter()); return false;">'+name+'</a></td></tr>');
+     // Add states & bbox values to zoom select options
+     options += '<option value="' + bbox + '", id="' + id + '">' + geojson._layers[each].feature.properties.name + '</option>';
+     }*/
+    geojson.eachLayer(function (layer) {
+        var id = layer._leaflet_id;
+        var name = layer.feature.properties.name;
+        var bbox = layer.getBounds().toBBoxString();
+
+        // Populate states array and build autocomplete
+        states.push({id: id, label: name, value: name, bbox: bbox});
+        $("#search").autocomplete({
+            source: states,
+            minLength: 3,
+            select: function (event, ui) {
+                map.fitBounds([
+                    [parseFloat(ui.item.bbox.split(",")[1]), parseFloat(ui.item.bbox.split(",")[0])],
+                    [parseFloat(ui.item.bbox.split(",")[3]), parseFloat(ui.item.bbox.split(",")[2])]
+                ]);
+                map._layers[ui.item.id].openPopup();
+                map._layers[ui.item.id]._popup.setLatLng(map._layers[ui.item.id].getBounds().getCenter());
+            }
+        });
+        // Populate sidebar table with clickable state links
+        $("#statelist table").append('<tr><td><a href="#" onclick="map._layers[' + id + '].openPopup(); map._layers[' + id + ']._popup.setLatLng(map._layers[' + id + '].getBounds().getCenter()); return false;">' + name + '</a></td></tr>');
+        // Add states & bbox values to zoom select options
+        options += '<option value="' + bbox + '", id="' + id + '">' + layer.feature.properties.name + '</option>';
+    });
+    $("#zoom").html(options);
+
+    // Function call by "zoom" dropdown onSelect
+    function zoomToState(state, bbox, id) {
+        if (state === "Select a State") {
+            map.fitBounds(geojson.getBounds());
+        }
+        else {
+            map.fitBounds([
+                [parseFloat(bbox.split(",")[1]), parseFloat(bbox.split(",")[0])],
+                [parseFloat(bbox.split(",")[3]), parseFloat(bbox.split(",")[2])]
+            ]);
+            map._layers[id].openPopup();
+            map._layers[id]._popup.setLatLng(map._layers[id].getBounds().getCenter());
+        }
+        ;
+    }
+
+</script>
+</body>
+</html>
