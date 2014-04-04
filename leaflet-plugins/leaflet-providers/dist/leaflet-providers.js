@@ -30,7 +30,7 @@
 					options: L.Util.extend({}, provider.options, variant.options)
 				};
 			} else if (typeof provider.url === 'function') {
-				provider.url = provider.url(parts.splice(1).join('.'));
+				provider.url = provider.url(parts.splice(1, parts.length - 1).join('.'));
 			}
 
 			// replace attribution placeholders with their values from toplevel provider attribution,
@@ -74,6 +74,12 @@
 				},
 				DE: {
 					url: 'http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png'
+				},
+				HOT: {
+					url: 'http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+					options: {
+						attribution: '{attribution.OpenStreetMap}, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+					}
 				}
 			}
 		},
@@ -109,13 +115,17 @@
 			}
 		},
 		OpenMapSurfer: {
-			url: 'http://129.206.74.245:8001/tms_r.ashx?x={x}&y={y}&z={z}',
+			url: 'http://openmapsurfer.uni-hd.de/tiles/roads/x={x}&y={y}&z={z}',
 			options: {
 				attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data {attribution.OpenStreetMap}'
 			},
 			variants: {
+				Roads: {},
+				AdminBounds: {
+					url: 'http://openmapsurfer.uni-hd.de/tiles/adminb/x={x}&y={y}&z={z}'
+				},
 				Grayscale: {
-					url: 'http://129.206.74.245:8008/tms_rg.ashx?x={x}&y={y}&z={z}'
+					url: 'http://openmapsurfer.uni-hd.de/tiles/roadsg/x={x}&y={y}&z={z}'
 				}
 			}
 		},
@@ -381,6 +391,27 @@
 					url: 'http://a{s}.acetate.geoiq.com/tiles/hillshading/{z}/{x}/{y}.png'
 				}
 			}
+		},
+		CloudMade: {
+			url: 'http://{s}.tile.cloudmade.com/{apiKey}/{styleID}/256/{z}/{x}/{y}.png',
+			options: {
+				attribution:
+					'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+					'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+					'Map tile imagery © <a href="http://cloudmade.com">CloudMade</a>',
+				minZoom: 0,
+				apiKey: 'abc', // Sign up for an API key at http://cloudmade.com/ - first 500,000 tile requests are free
+				styleID: '1'
+			},
+			variants: {
+				standardResolution: {
+					maxZoom: 18
+				},
+				highResolution: {
+					url: 'http://{s}.tile.cloudmade.com/{apiKey}/{styleID}@2x/256/{z}/{x}/{y}.png',
+					maxZoom: 19
+				}
+			}
 		}
 	};
 
@@ -425,7 +456,7 @@
 					    i = 0;
 
 					while (i < len) {
-						if (typeof base[i] === 'string') {
+						if (typeof overlay[i] === 'string') {
 							out[labelFormatter(overlay[i])] = L.tileLayer.provider(overlay[i]);
 						}
 						i++;
@@ -445,4 +476,3 @@
 		return new L.Control.Layers.Provided(baseLayers, overlays, options);
 	};
 }());
-

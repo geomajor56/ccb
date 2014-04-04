@@ -1,15 +1,15 @@
-var map, geojsonLayer, thisStation, markers, mystation;
+/* global L */
+/*   ================================   Splash Screen  ============================*/
+if ($.cookie('modal_shown') === null) {
+    $.cookie('modal_shown', 'yes', { expires: 7, path: '/' });
+    $('#myModal').modal({
+        keyboard: false
+    });
+}
+var L, map, thisStation, mystation;
 $(document).ready(function () {
 
-    //TODO need to put all functions in one place goddamit!!
 
-    /*   ================================   Splash Screen  ============================*/
-    if ($.cookie('modal_shown') == null) {
-        $.cookie('modal_shown', 'yes', { expires: 7, path: '/' });
-        $('#myModal').modal({
-            keyboard: false
-        });
-    }
     /*   ================================    Functions   ============================*/
     $('#action').click(function () {
         $('#map-content').hide();
@@ -17,78 +17,83 @@ $(document).ready(function () {
         $("wp").scrollspy();
     });
 
-    function handleJson(data) { //TODO need to work on popup, no hover, click, and add onclick link inside of popup
-        var geojsonLayer = L.geoJson(data, {
-            onEachFeature: onEachFeature //function (feature, layer) {
-                //layer.bindPopup(feature.properties.station_name);
-                //layer.on({
-                 //   mouseover: highlightFeature
-                    //click: temp  //makeCharts
-                //});
-            //}
-        });
 
-        markers.addLayer(geojsonLayer);
-        map.addLayer(markers);
+    var flaskIcon = L.MakiMarkers.icon({icon: "chemist", color: "#09962F", size: "s"});
+
+    var info = L.control();
+
+    function highlightFeature(e) {
+        var layer = e.target;
+        info.update(layer.feature.properties);
     }
 
-    /*function highlightFeature(e) {
-        layer = e.target;
-        thisStation = e.target.feature.properties.station_name;
-        var link = '<a href="#" id="getInfo">TestLink</a>'
-        layer.bindPopup('Statsdfion: ' + thisStation + '<br>' + link);//.openPopup();
-        //layer.bindPopup('Station: ' + thisStation + '<br>' + '<button class="btn btn-small btn-danger" id="getInfo" type="button">Station Data</button>').openPopup();
-    }*/
+    function onEachFeature(feature, layer) {
+        //if (feature.properties) {
+        //   layer.bindPopup(feature.properties.station_name);
+        //}
+        layer.on({
+            mouseover: highlightFeature,
+            click: makeCharts
+        });
+    }
 
-    $("#back-to-map").click(function () {//TODO disable on ...
+    function handleJson(data) {
+        L.geoJson(data, {
+            onEachFeature: onEachFeature,
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {icon: flaskIcon});
+            }
+        }).addTo(map);
+    }
+
+
+    //var geojsonLayer = L.geoJson(data, {
+    //    onEachFeature: onEachFeature
+    //});
+    // markers.addLayer(geojsonLayer, {icon: testTube});
+    // map.addLayer(markers);
+    // }
+
+    /*function highlightFeature(e) {
+     layer = e.target;
+     thisStation = e.target.feature.properties.station_name;
+     var link = '<a href="#" id="getInfo">TestLink</a>'
+     layer.bindPopup('Statsdfion: ' + thisStation + '<br>' + link);//.openPopup();
+     //layer.bindPopup('Station: ' + thisStation + '<br>' + '<button class="btn btn-small btn-danger" id="getInfo" type="button">Station Data</button>').openPopup();
+     }*/
+
+    $("#back-to-map").click(function () {
         $('#container1').hide();
         $('#container2').hide();
         $('#container3').hide();
         $('#map').show();
     });
 
-    $("#zoom-out-cape").click(function () {//TODO disable on ...
-        map.fitBounds(bounds);
-    });
-
-    function doIt(){
-        alert("Hey MotherFuckers");
-    }
-
-
-    function highlightFeature(e) {
-        var layer = e.target;
-
-//              if (!L.Browser.ie && !L.Browser.opera) {
-//            layer.bringToFront();
-//        }
-
-        info.update(layer.feature.properties);
-    }
-
-
-
-
-    function onEachFeature(feature, layer) {
-			if (feature.properties) {
-            	layer.bindPopup(feature.properties.station_name);
-          	}
-			layer.on({
-				mouseover: highlightFeature,
-				click: doIt
-			});
-		}
 
     /*   ================================LeafLet Map and Popups   ============================*/
 
-    var southWest = L.LatLng(41.39741506646461, -71.25320434570312);
-    var northEast = L.LatLng(42.134894984239224, -69.64645385742188);
-    var bounds = L.LatLngBounds(southWest, northEast);
+    var southWest = L.LatLng(41.39741506646461, -71.25320434570312),
+        northEast = L.LatLng(42.134894984239224, -69.64645385742188),
+        bounds = L.LatLngBounds(southWest, northEast);
 
-    map = L.map('map', {
-        maxBounds: bounds,
-        zoomControl: true
+    var map = L.map('map', {
+        maxBounds: bounds
+//        zoomControl: true
     }).setView([41.7672146942102, -70.35232543945312], 10);
+
+    /*   ================================    Base Maps   ============================*/
+
+    var Esri_WorldTopoMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+    });
+
+
+    var Stamen_Watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+        subdomains: 'abcd',
+        minZoom: 3,
+        maxZoom: 16
+    });
 
     var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var osmAttrib = 'Map data &copy; OpenStreetMap contributors';
@@ -98,43 +103,26 @@ $(document).ready(function () {
         attribution: osmAttrib
     });
 
-    var defaultLayer = L.tileLayer.provider('Nokia.satelliteNoLabelsDay', {minZoom: 10, maxZoom: 17}).addTo(map);
+    map.addLayer(Esri_WorldTopoMap)
 
-    var cloudmadeURL = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
-    var nightTime = L.tileLayer(cloudmadeURL, {
-        minZoom: 0,
-        maxZoom: 17,
-        styleId: 999
+    var mini = new L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
     });
+    var miniMap = new L.Control.MiniMap(mini,
+        { toggleDisplay: true,
+            position: 'bottomleft',
+            zoomLevelOffset: -3,
+            width: 200,
+            height: 200
+        }).addTo(map);
 
-    var baseLayers = {
-        "OpenStreetMap Default": osm,
-        "Nokia Satellite": defaultLayer
-    };
-
-    //L.control.layers(baseLayers).addTo(map);
-
-
-    var miniMap = new L.Control.MiniMap(nightTime, {
-        position: 'bottomleft',
-        width: 200,
-        height: 200,
-        toggleDisplay: true
-    }).addTo(map);
-
+    /*   ================================    Leaflet Controls   ============================*/
     L.control.coordinates().addTo(map);
+    var viewCenter = new L.Control.ViewCenter();
+    map.addControl(viewCenter);
 
 
-    var markers = new L.MarkerClusterGroup({
-        maxClusterRadius: 25,
-        spiderfyOnMaxZoom: true,
-        spiderfyDistanceMultiplier: 3,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true
-    });
-/*  ====================    mcBrides Info Panel   ==========================================  */
-    // control that shows state info on hover
-    var info = L.control();
+    /*  ====================    mcBrides Info Panel   ==========================================  */
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'info');
@@ -143,8 +131,9 @@ $(document).ready(function () {
     };
 
     info.update = function (props) {
-        this._div.innerHTML = '<h4>Station Info</h4>' + (props ?
-                 "Station Name: " + '<b>' +  props.station_name + '</b><br />' + "Station Type: " +  '<b>' + props.station_type + '</b>' : 'Hover over a Marker');
+        //this._div.innerHTML = '<h4>Station Info</h4>' + (props ?
+        this._div.innerHTML = (props ?
+            "Station Name: " + '<b>' + props.station_name + '</b><br />' + "Station Type: " + '<b>' + props.station_type + '</b>' : 'Hover over a Marker');
     };
 
     info.addTo(map);
@@ -179,7 +168,7 @@ $(document).ready(function () {
 
 
     function makeCharts(e) { //TODO too many arbitrary parameters in my functions, could be trouble
-        console.log(mystation);
+        //console.log(mystation);
         $('#map').hide();
         $('#container1').show();//TODO there has to be a more efficient way with jquery
         $('#container2').show();
@@ -188,31 +177,31 @@ $(document).ready(function () {
 
         var layer = e.target;
         thisStation = e.target.feature.properties.station_name;
-        mystation = e.target.feature.id.split(".")[1];
+        mystation = '7S'; //e.target.feature.id.split(".")[1];
 
         /*  =================================================================================================  */
 
-        var temperature = [];
-        var salinity = [];
-        var dissolved_oxygen = [];
-        var nitrogen = [];
-        var phosphates = [];
-        var ammonium = [];
-        var total_nitrogen = [];
-        var total_phosphorus = [];
-        var chlorophyll = [];
-        var pheophytin = [];
-        var turbidity = [];
+        var temperature = [],
+            salinity = [],
+            dissolved_oxygen = [],
+            nitrogen = [],
+            phosphates = [],
+            ammonium = [],
+            total_nitrogen = [],
+            total_phosphorus = [],
+            chlorophyll = [],
+            pheophytin = [],
+            turbidity = [];
 
 
-        /*$.ajax({
+        /* $.ajax({
          type: "POST",
-         url: "../php/get_station_data.php",
-         password: 'Wyliepup1',
-         data: {
-         "station_num_id": mystation
-         },
-         dataType: 'json',
+         url: "7s.js",
+         //password: 'Wyliepup1',
+         //data: {
+         //"station_num_id": mystation
+         //},
+         //dataType: 'json',
          error: function (xhr, ajaxOptions, thrownError) {
          alert(xhr.status);
          alert(thrownError);
@@ -220,7 +209,8 @@ $(document).ready(function () {
          success: chartParser
          });*/
 
-        function chartParser(data) {
+        $.getJSON("7s.js", function chartParser(data) {
+            var sampleDate, d, sampleYear;
             $('#map-content').hide();//TODO again, a function with before, present, after (situation) parameter
             $('#chart-content').show();
 
@@ -242,19 +232,40 @@ $(document).ready(function () {
 
             }
 
-//            var chart1 = new Highcharts.Chart(chart1_options);//TODO this could be smoother
-//            var chart2 = new Highcharts.Chart(chart2_options);
-//            var chart3 = new Highcharts.Chart(chart3_options);
-//            var chart4 = new Highcharts.Chart(chart4_options);
-        }
+            var chart1 = new Highcharts.Chart(chart1_options);//TODO this could be smoother
+            var chart2 = new Highcharts.Chart(chart2_options);
+            var chart3 = new Highcharts.Chart(chart3_options);
+            var chart4 = new Highcharts.Chart(chart4_options);
+
+
+            $("a.accordion-toggle").click(function () {
+                var thisYear = $(this).attr("data-attr");
+                chart1.xAxis[0].setExtremes(Date.UTC(thisYear, 0, 1), Date.UTC(thisYear, 11, 31));
+                chart2.xAxis[0].setExtremes(Date.UTC(thisYear, 0, 1), Date.UTC(thisYear, 11, 31));
+                chart3.xAxis[0].setExtremes(Date.UTC(thisYear, 0, 1), Date.UTC(thisYear, 11, 31));
+                chart4.xAxis[0].setExtremes(Date.UTC(thisYear, 0, 1), Date.UTC(thisYear, 11, 31));
+
+            });
+
+
+            /* $('#2006').click(function () {
+
+
+             });*/
+        });
+
 
         var chart1_options = {// TODO combine all commonalities into plotOptions() real fuckin soon
             //TODO lose title, put legend up top, need vertical space
 
             chart: {
-                height: 250,
+                height: 200,
                 renderTo: 'container1',
                 zoomType: 'x'
+            },
+
+            legend: {
+                enabled: false
             },
 
             title: {
@@ -339,13 +350,13 @@ $(document).ready(function () {
                     marker: {
                         enabled: false
                     }
-                    //dashStyle: 'shortdot'
+
                 },
                 {
 
                     name: 'Dissolved Oxygen',
                     color: '#4572A7',
-                    type: 'line',
+                    type: 'spline',
                     yAxis: 1,
 
                     data: dissolved_oxygen,
@@ -353,13 +364,13 @@ $(document).ready(function () {
                         valueSuffix: ' mg/L'
                     },
                     marker: {
-                        enabled: false
+                        enabled: true
                     }
-                    //dashStyle: 'shortdot'
+
                 },
                 {
                     name: 'Salinity',
-                    type: 'line',
+                    type: 'spline',
                     color: '#AA4643',
                     yAxis: 2,
                     data: salinity,
@@ -368,9 +379,8 @@ $(document).ready(function () {
                     },
 
                     marker: {
-                        enabled: false
+                        enabled: true
                     }
-                    //dashStyle: 'shortdot'
 
                 }
 
@@ -379,10 +389,14 @@ $(document).ready(function () {
         var chart2_options = {
 
             chart: {
-                height: 250,
+                height: 200,
                 renderTo: 'container2',
-                type: 'line',
+                type: 'spline',
                 zoomType: 'x'
+            },
+
+            legend: {
+                enabled: false
             },
 
             title: {
@@ -416,7 +430,7 @@ $(document).ready(function () {
 
                 },
                 {// Secondary yAxis
-                    gridLineWidth: 0,
+                    //gridLineWidth: 0,
                     title: {
                         text: 'Ortho-Phosphates',
                         style: {
@@ -466,7 +480,7 @@ $(document).ready(function () {
                         valueSuffix: ' um'
                     },
                     marker: {
-                        enabled: false
+                        enabled: true
                     }
                     //dashStyle: 'shortdot'
                 },
@@ -480,9 +494,8 @@ $(document).ready(function () {
                         valueSuffix: ' um'
                     },
                     marker: {
-                        enabled: false
+                        enabled: true
                     }
-                    //dashStyle: 'shortdot'
 
                 },
                 {
@@ -495,7 +508,7 @@ $(document).ready(function () {
                     },
                     yAxis: 2,
                     marker: {
-                        enabled: false
+                        enabled: true
                     }
 
                 }
@@ -504,11 +517,16 @@ $(document).ready(function () {
         var chart3_options = {
 
             chart: {
-                height: 250,
-                type: 'line',
+                height: 200,
+                type: 'spline',
                 renderTo: 'container3',
                 zoomType: 'x'
             },
+
+            legend: {
+                enabled: false
+            },
+
             title: {
                 text: 'Total Nitrogen and Phosphorus for Station: ' + thisStation
             },
@@ -567,7 +585,7 @@ $(document).ready(function () {
                         valueSuffix: ' um'
                     },
                     marker: {
-                        enabled: false
+                        enabled: true
                     }
 
                 },
@@ -580,7 +598,7 @@ $(document).ready(function () {
                         valueSuffix: ' um'
                     },
                     marker: {
-                        enabled: false
+                        enabled: true
                     }
                 }
             ]
@@ -588,11 +606,16 @@ $(document).ready(function () {
         var chart4_options = {
 
             chart: {
-                height: 250,
+                height: 200,
                 type: 'line',
                 renderTo: 'container4',
                 zoomType: 'x'
             },
+
+            legend: {
+                enabled: false
+            },
+
             title: {
                 text: 'Chlorophyll, Pheophytin, and Turbidity for Station: ' + thisStation
             },
@@ -609,7 +632,7 @@ $(document).ready(function () {
                     title: {
                         text: 'Turbidity',
                         style: {
-                            color: '#89A54E'
+                            color: '#ED7842'
                         }
                     },
 
@@ -619,7 +642,7 @@ $(document).ready(function () {
                             return this.value + ' NTU';
                         },
                         style: {
-                            color: '#89A54E'
+                            color: '#ED7842'
                         }
                     }
 
@@ -630,7 +653,7 @@ $(document).ready(function () {
                     title: {
                         text: 'Chlorophyll',
                         style: {
-                            color: '#4572A7'
+                            color: '#556b2f'
                         }
                     },
                     labels: {
@@ -638,7 +661,7 @@ $(document).ready(function () {
                             return this.value + ' ug/L';
                         },
                         style: {
-                            color: '#4572A7'
+                            color: '#556b2f'
                         }
                     },
                     opposite: true
@@ -649,7 +672,7 @@ $(document).ready(function () {
                     title: {
                         text: 'Pheophytin',
                         style: {
-                            color: '#AA4643'
+                            color: '#8fbc8f'
                         }
                     },
                     labels: {
@@ -657,7 +680,7 @@ $(document).ready(function () {
                             return this.value + ' ug/L';
                         },
                         style: {
-                            color: '#AA4643'
+                            color: '#8fbc8f'
                         }
                     },
                     opposite: true
@@ -671,7 +694,7 @@ $(document).ready(function () {
             series: [
                 {
                     name: 'Turbidity',
-                    color: '#F2B40C',
+                    color: '#A0522D ',
                     data: turbidity,
                     type: 'area',
                     yAxis: 1,
@@ -684,11 +707,11 @@ $(document).ready(function () {
                 },
                 {
                     name: 'Pheophytin',
-                    color: '#4572A7',
+                    color: '#8fbc8f',
                     yAxis: 2,
                     data: pheophytin,
                     marker: {
-                        enabled: false
+                        enabled: true
                     },
                     tooltip: {
                         valueSuffix: ' ug/L'
@@ -697,11 +720,11 @@ $(document).ready(function () {
                 },
                 {
                     name: 'Chlorophyll',
-                    color: '#89A54E',
+                    color: '#556b2f',
                     yaxis: 2,
                     data: chlorophyll,
                     marker: {
-                        enabled: false
+                        enabled: true
                     },
                     tooltip: {
                         valueSuffix: ' ug/L'
@@ -710,9 +733,6 @@ $(document).ready(function () {
 
             ]
         };
-
-        /*  =================================================================================================  */
-
     }
 
 });

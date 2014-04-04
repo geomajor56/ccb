@@ -7,14 +7,16 @@
     <title>Provincetown Center for Coastal Studies</title>
 
     <!--------------------------------JQuery------------------------------------------>
-    <script src="./jquery/jquery-1.9.1.js"></script>
+    <!--<script src="./jquery/jquery-1.10.1.js"></script>-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="./jquery/jquery.cookie.js"></script>
 
     <!----------------------------------CSS----------------------------------------->
 
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css"/>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css"/>
     <link rel="stylesheet" href="./leaflet-plugins/leaflet-minimap/dist/Control.MiniMap.css"/>
     <link rel="stylesheet" href="./leaflet-plugins/leaflet-coordinates/dist/Leaflet.Coordinates-0.1.3.css">
+    <link rel="stylesheet" href="./leaflet-plugins/leaflet-viewcenter/leaflet.viewcenter.css" />
     <!--[if lte IE 8]>
     <link rel="stylesheet" href="./leaflet-plugins/leaflet-coordinates/dist/Leaflet.Coordinates-0.1.3.ie.css"/>
     <![endif]-->
@@ -39,8 +41,8 @@
 
     <!----------------------------------Leaflet and Plugins---------------------------------------->
 
-    <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
-    <!--<script src="./leaflet/Leaflet.js"></script>-->
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <script src="./scripts/Leaflet.MakiMarkers.js"></script>
     <script src="./leaflet-plugins/leaflet-providers/dist/leaflet-providers.js"></script>
     <script src="./leaflet-plugins/leaflet-minimap/dist/Control.MiniMap.js"></script>
     <script src="./leaflet-plugins/leaflet-coordinates/dist/Leaflet.Coordinates-0.1.3.min.js"></script>
@@ -50,6 +52,8 @@
     <!--&lt;!&ndash;<link rel="stylesheet" href="./leaflet-plugins/leaflet-markercluster/dist/leafletmarkercluster.default.ie.css"/>
 -->
     <script src="./leaflet-plugins/leaflet-markercluster/dist/leaflet.markercluster-src.js"></script>
+    <script src="./leaflet-plugins/leaflet-viewcenter/leaflet.viewcenter.js"></script>
+
 
 
 </head>
@@ -195,7 +199,7 @@
     <div class="row-fluid">
         <div class="span3 well well-small rounded ">
             <img src="images/Color_Logo.svg">
-            <h4>Map Content</h4>
+            <h4>Mapsdfs Content</h4>
 
             <p>I have no idea what to put here. Maybe some instructions?</p>
             bay, focusing specifically on nitrogen and phosphorous. Excessive nutrient input is behind most
@@ -215,130 +219,164 @@
 
 <div id="chart-content" class="container-fluid" style="display: none;">
     <div class="row-fluid">
-        <div class="span3 pull-left">
-            <div class="container well">
-                <!--<div class="row">-->
-                <div class="span3">
-                    <div class="accordion" id="accordion2">
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                                   href="#collapseOne">
-                                    2006
-                                </a>
-                            </div>
-                            <div id="collapseOne" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    <h5>Station Summary</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                                   href="#collapseTwo">
-                                    2007
-                                </a>
-                            </div>
-                            <div id="collapseTwo" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    Station Summary
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                                   href="#collapseThree">
-                                    2008
-                                </a>
-                            </div>
-                            <div id="collapseThree" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    Station Summary
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                                   href="#collapseFour">
-                                    2009
-                                </a>
-                            </div>
-                            <div id="collapseFour" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    Station Summary
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                                   href="#collapseFive">
-                                    2010
-                                </a>
-                            </div>
-                            <div id="collapseFive" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    Station Summary
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                                   href="#collapseSix">
-                                    2011
-                                </a>
-                            </div>
-                            <div id="collapseSix" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    Station Summary
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                                   href="#collapseSeven">
-                                    2012
-                                </a>
-                            </div>
-                            <div id="collapseSeven" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    Station Summary
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                                   href="#collapseEight">
-                                    2013
-                                </a>
-                            </div>
-                            <div id="collapseEight" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    Station Summary
-                                </div>
-                            </div>
+        <div class="span3 well well-small rounded">
+            <p class="lead text-center">Click on Year for Data</p>
+
+            <div class="accordion" id="chart_accordion">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-attr="2006" data-toggle="collapse"
+                           data-parent="#chart_accordion"
+                           href="#collapseOne">
+                            2006
+                        </a>
+                    </div>
+                    <div id="collapseOne" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <h5>Station Summary</h5>
+
+                            <p>
+                                At all stations, water temperature, salinity, dissolved oxygen and pH are measured in
+                                situ. Water
+                                samples
+                                are collected from the surface waters and, for all stations greater than one meter in
+                                depth, near
+                                bottom
+                                water samples are collected as well. These samples are then taken to PCCS’s
+                                state-certified
+                                laboratory and
+                                analyzed for nitrate+nitrite, ortho-phosphate, ammonia, total nitrogen, total
+                                phosphorous,
+                                chlorophyll a,
+                                pheophytin and turbidity.
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="span9">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-attr="2007" data-toggle="collapse"
+                           data-parent="#chart_accordion"
+                           href="#collapseTwo">
+                            2007
+                        </a>
+                    </div>
+                    <div id="collapseTwo" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            Station Summary
+                            <p>
+                                At all stations, water temperature, salinity, dissolved oxygen and pH are measured in
+                                situ. Water
+                                samples
+                                are collected from the surface waters and, for all stations greater than one meter in
+                                depth, near
+                                bottom
+                                water samples are collected as well. These samples are then taken to PCCS’s
+                                state-certified
+                                laboratory and
+                                analyzed for nitrate+nitrite, ortho-phosphate, ammonia, total nitrogen, total
+                                phosphorous,
+                                chlorophyll a,
+                                pheophytin and turbidity.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-attr="2008" data-toggle="collapse"
+                           data-parent="#chart_accordion"
+                           href="#collapseThree">
+                            2008
+                        </a>
+                    </div>
+                    <div id="collapseThree" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            Station Summary
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-attr="2009" data-toggle="collapse"
+                           data-parent="#chart_accordion"
+                           href="#collapseFour">
+                            2009
+                        </a>
+                    </div>
+                    <div id="collapseFour" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            Station Summary
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-attr="2010" data-toggle="collapse"
+                           data-parent="#chart_accordion"
+                           href="#collapseFive">
+                            2010
+                        </a>
+                    </div>
+                    <div id="collapseFive" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            Station Summary
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-attr="2011" data-toggle="collapse"
+                           data-parent="#chart_accordion"
+                           href="#collapseSix">
+                            2011
+                        </a>
+                    </div>
+                    <div id="collapseSix" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            Station Summary
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-attr="2012" data-toggle="collapse"
+                           data-parent="#chart_accordion"
+                           href="#collapseSeven">
+                            2012
+                        </a>
+                    </div>
+                    <div id="collapseSeven" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            Station Summary
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-attr="2013" data-toggle="collapse"
+                           data-parent="#chart_accordion"
+                           href="#collapseEight">
+                            2013
+                        </a>
+                    </div>
+                    <div id="collapseEight" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            Station Summary
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!--</div>-->
         </div>
         <div class="span9 rounded pull-right">
-            <div class="rounded" id="chart-container"></div>
+            <div class="rounded" id="chart-container">
+                <div id="container1" style="display: none;"></div>
+                <div id="container2" style="display: none;"></div>
+                <div id="container3" style="display: none;"></div>
+                <div id="container4" style="display: none;"></div>
+            </div>
         </div>
     </div>
-    <div id="container1" style="display: none;"></div>
-    <div id="container2" style="display: none;"></div>
-    <div id="container3" style="display: none;"></div>
-    <div id="container4" style="display: none;"></div>
 </div>
 
 

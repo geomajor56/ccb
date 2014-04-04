@@ -1,7 +1,7 @@
 .leaflet-popup-content {
     /*  override leaflet popup font color*/
     color: #000000;
-    text-align:center;
+    text-align: center;
     font-size: 14px;
 }
 
@@ -10,10 +10,9 @@
     color: #000000;
 }
 
-.info{
+.info {
     color: #000000;
 }
-
 
 .modal-body {
     background-image: url('../images/Color_Logo_transpa_20.png');
@@ -26,13 +25,19 @@
     text-shadow: 1px 1px 1px #000;
 }
 
+.accordion-heading {
+    text-align: center;
+    font-size: 16px;
+}
+
 img {
-    opacity: 0.4;
-    filter: alpha(opacity=40); /* For IE */
+/ / opacity : 0.4;
+/ / filter : alpha(opacity = 40); /* For IE */
 }
 
 body {
     padding: 1em;
+
 }
 
 .rounded {
@@ -62,17 +67,17 @@ body {
 }
 
 .info {
-            padding: 6px 8px;
-            font: 14px/16px Arial, Helvetica, sans-serif;
-            background: white;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-        }
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    /*background: white;*/
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
 
-        .info h4 {
-            margin: 0 0 5px;
-            color: #000000;
-        }
+.info h4 {
+    margin: 0 0 5px;
+    color: #000000;
+}
 
 
